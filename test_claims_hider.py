@@ -2,8 +2,9 @@ from rldd import rldd2
 # CONNECTION
 db = rldd2.LOCAL_connect("local")
 # FILE
-file = open('C://MAP/map.txt').read()
-ccn = file.split("\n")
+read_file = open('C://MAP/map.txt').read()
+result_file = open('./test_claims_hide.log', 'w+', encoding='utf-8')
+ccn = read_file.split("\n")
 # Program code
 for claim in ccn:
     cursor = db["claims"].find_one({"customClaimNumber": claim})
@@ -23,6 +24,10 @@ for claim in ccn:
             {"customClaimNumber": claim},
             {"$set": updateData}
         )
-        print(f'Claim: {claim} progress: {upd.modified_count} / {upd.matched_count}')
+        result_print = f'Claim: {claim} progress: {upd.modified_count} / {upd.matched_count}'
+        print(result_print)
+        result_file.write(f'{result_print}\n')
     else:
         print(f'Claim: {claim} is not found.')
+        result_file.write(f'Claim: {claim} is not found.\n')
+result_file.close()
