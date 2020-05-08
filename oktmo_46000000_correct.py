@@ -1,7 +1,8 @@
 from rldd import rldd2
+from user import rldd_user
 from datetime import datetime
 
-db = rldd2.LOCAL_connect('local')
+db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 local = rldd2.LOCAL_connect('local')
 claims = db["claims"].find({
     "oktmo": "46000000",
