@@ -45,6 +45,6 @@ for claim in claims:
             })
             print(f'{ccn}, oktmo: {oktmo}. Updated progress: {upd.modified_count} / {upd.matched_count}')
             isFounded = True
-            break
+            continue
     if not isFounded:
         print(ccn)

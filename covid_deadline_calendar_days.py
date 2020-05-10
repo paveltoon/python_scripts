@@ -1,9 +1,11 @@
 from rldd import rldd2
 from user import rldd_user
+import bson
 from datetime import datetime, timedelta
+
 log = open('add_deadlines_covid.log', 'w+')
-# db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
-db = rldd2.LOCAL_connect('local')
+db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
+# db = rldd2.LOCAL_connect('local')
 total = 0
 corrected = 0
 claims = db["claims"].find({"$or": [{"deadlineInWorkDays": False}, {"deadlineStages.deadlineInWorkDays": False}],
@@ -20,6 +22,7 @@ for claim in claims:
     full_deadline = 0
     isWorkingDays = False
     total_days_to_deadline = 0
+    print(ccn)
     try:
         if claim["deadlineInWorkDays"] is True:
             continue
@@ -65,7 +68,12 @@ for claim in claims:
             corrected += upd.modified_count
     except KeyError:
         print(f'KeyError in {claim["customClaimNumber"]}')
-    except Exception:
+        continue
+    except bson.errors.InvalidBSON:
         print(f'Error in {claim["customClaimNumber"]}')
+        continue
+    except:
+        print(f'Error in {claim["customClaimNumber"]}')
+        continue
 log.close()
 print(f'Всего заявок найдено: {total}\nЗаявок обработано: {corrected}')

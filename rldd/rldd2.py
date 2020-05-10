@@ -1,6 +1,6 @@
 import pymongo
 import datetime
-
+from bson import ObjectId
 
 def PROD_connect(login, password, db="rldd2"):
     client = pymongo.MongoClient(f"mongodb://{login}:{password}@10.10.80.31:27017/rldd2")
@@ -44,3 +44,10 @@ def isodate(date):
                              int(time_format[1]),
                              int(time_format[2]),
                              int(time_format[3]))
+
+
+def getId(_id):
+    if len(_id) == 24:
+        return ObjectId(_id)
+    else:
+        return _id
