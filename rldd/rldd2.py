@@ -2,6 +2,7 @@ import pymongo
 import datetime
 from bson import ObjectId
 
+
 def PROD_connect(login, password, db="rldd2"):
     client = pymongo.MongoClient(f"mongodb://{login}:{password}@10.10.80.31:27017/rldd2")
     return client[db]
