@@ -18,33 +18,35 @@ claims = db["claims"].find({
         }
     }],
     "provLevel": "ОМСУ",
-    "claimCreate": {"$gte": rldd2.isodate("2019-08-05T01:03:09.046+0000")}
+    "claimCreate": {"$gte": rldd2.isodate("2020-01-10T21:00:00.000+0000")}
 })
 for claim in claims:
     ccn = claim["customClaimNumber"]
     claimId = claim["_id"]
-    fields = claim["fields"]["sequenceValue"]
     isFounded = False
-
-    for field in fields:
-        if "stringId" in field and field["stringId"] == "municipality":
-            oktmo = field["value"]
-            localClaim = {
-                "customClaimNumber": ccn,
-                "oldOktmo": claim["oktmo"],
-                "newOktmo": oktmo,
-                "createDate": datetime.today()
-            }
-            local["claims"].insert_one(localClaim)
-            upd = db["claims"].update_one({
-                "_id": claimId
-            }, {
-                "$set": {
-                    "oktmo": oktmo
+    try:
+        fields = claim["fields"]["sequenceValue"]
+        for field in fields:
+            if "stringId" in field and field["stringId"] == "municipality":
+                oktmo = field["value"]
+                localClaim = {
+                    "customClaimNumber": ccn,
+                    "oldOktmo": claim["oktmo"],
+                    "newOktmo": oktmo,
+                    "createDate": datetime.today()
                 }
-            })
-            print(f'{ccn}, oktmo: {oktmo}. Updated progress: {upd.modified_count} / {upd.matched_count}')
-            isFounded = True
-            continue
-    if not isFounded:
-        print(ccn)
+                local["claims"].insert_one(localClaim)
+                upd = db["claims"].update_one({
+                    "_id": claimId
+                }, {
+                    "$set": {
+                        "oktmo": oktmo
+                    }
+                })
+                print(f'{ccn}, oktmo: {oktmo}. Updated progress: {upd.modified_count} / {upd.matched_count}')
+                isFounded = True
+                continue
+        if not isFounded:
+            print(ccn)
+    except KeyError:
+        print(f"{ccn} keyError")
