@@ -1,6 +1,7 @@
 from rldd import rldd2
+from user import rldd_user
 # CONNECTION
-db = rldd2.LOCAL_connect("local")
+db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 # FILE
 read_file = open('C://MAP/map.txt').read()
 result_file = open('./test_claims_hide.log', 'w+', encoding='utf-8')
