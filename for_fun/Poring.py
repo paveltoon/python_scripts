@@ -1,6 +1,10 @@
 import requests
 import json
 import urllib.parse
+from classes_try import Car
+
+niles = Car('BMW', 'E46', 2001, "+5 Nile's Bracelet")
+print(niles.get_status())
 
 
 def getItemPrices(item_name):
