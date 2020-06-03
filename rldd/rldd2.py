@@ -18,6 +18,11 @@ def STAGE_connect():
     return client["rldd2"]
 
 
+def REMOUT_connect():
+    client = pymongo.MongoClient(f"mongodb://10.10.80.100:27017")
+    return client
+
+
 def LOCAL_connect(base_name):
     client = pymongo.MongoClient("localhost:27017")
     return client[base_name]
