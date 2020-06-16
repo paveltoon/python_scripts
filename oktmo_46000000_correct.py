@@ -18,7 +18,7 @@ claims = db["claims"].find({
         }
     }],
     "provLevel": "ОМСУ",
-    "claimCreate": {"$gte": rldd2.isodate("2020-01-10T21:00:00.000+0000")}
+    "claimCreate": {"$gte": rldd2.ISODate("2020-01-10T21:00:00.000+0000")}
 })
 for claim in claims:
     ccn = claim["customClaimNumber"]

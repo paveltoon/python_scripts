@@ -10,11 +10,11 @@ total = 0
 corrected = 0
 claims = db["claims"].find({"$or": [{"deadlineInWorkDays": False}, {"deadlineStages.deadlineInWorkDays": False}],
                             "resultStatus": {"$exists": False},
-                            "activationDate": {"$gte": rldd2.isodate("2019-07-31T21:00:00.000+0000")}})
+                            "activationDate": {"$gte": rldd2.ISODate("2019-07-31T21:00:00.000+0000")}})
 # claims = db["claims"].find({"$or": [{"deadlineInWorkDays": False}, {"deadlineStages.deadlineInWorkDays": False}],
 #                             "resultStatus": {"$exists": False},
-#                             "activationDate": {"$gte": rldd2.isodate("2020-03-10T21:00:00.000+0000"),
-#                                                "$lte": rldd2.isodate("2020-03-20T21:00:00.000+0000")}})
+#                             "activationDate": {"$gte": rldd2.ISODate("2020-03-10T21:00:00.000+0000"),
+#                                                "$lte": rldd2.ISODate("2020-03-20T21:00:00.000+0000")}})
 for claim in claims:
     total += 1
     ccn = claim["customClaimNumber"]

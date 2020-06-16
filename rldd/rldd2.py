@@ -1,5 +1,8 @@
+from user import rldd_user
 import pymongo
 import datetime
+import requests
+import json
 from bson import ObjectId
 
 
@@ -28,7 +31,7 @@ def LOCAL_connect(base_name):
     return client[base_name]
 
 
-def isodate(date):
+def ISODate(date):
     full_format = str(date).split('T')
     date_format = full_format[0].split('-')
     for dt_index, dt in enumerate(date_format):
@@ -57,3 +60,21 @@ def getId(_id):
         return ObjectId(_id)
     else:
         return _id
+
+
+def postStatus(claim_id, status_code,
+               comment="Статус создан автоматически через РЛДД, для корректного закрытия заявки."):
+    url = 'http://10.10.80.54:8080/api/statuses/'
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    body = {
+        "claimId": str(claim_id),
+        "statusCode": str(status_code),
+        "createBy": "rldd2",
+        "comment": comment,
+        "lastModifiedBy": "rldd2",
+        "createState": "COMPLETED"
+    }
+    return requests.request("POST", url=url, headers=headers, data=json.dumps(body))

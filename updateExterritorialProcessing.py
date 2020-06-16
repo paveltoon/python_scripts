@@ -241,7 +241,7 @@ service_id_map = [
 
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 claimsUpdate = db['claims'].update_many({"service.srguServiceId": {'$in': service_id_map},
-                                         "claimCreate": {'$gte': rldd2.isodate("2018-10-01T00:00:00.000+0000")}},
+                                         "claimCreate": {'$gte': rldd2.ISODate("2018-10-01T00:00:00.000+0000")}},
                                         {
                                             '$set': {
                                                 "service.exterritorialProcessing": True
