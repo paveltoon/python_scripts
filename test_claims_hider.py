@@ -10,6 +10,7 @@ ccn = read_file.split("\n")
 for claim in ccn:
     cursor = db["claims"].find_one({"customClaimNumber": claim})
     if cursor is not None:
+        claimId = cursor["_id"]
         updateData = {
             "oktmo": "99999999"
         }
@@ -22,7 +23,7 @@ for claim in ccn:
             if serviceId.find("_444") == -1:
                 updateData["service.srguServiceId"] = f'{serviceId}_444'
         upd = db["claims"].update_one(
-            {"customClaimNumber": claim},
+            {"_id": claimId},
             {"$set": updateData}
         )
         result_print = f'Claim: {claim} progress: {upd.modified_count} / {upd.matched_count}'

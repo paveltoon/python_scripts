@@ -3,7 +3,7 @@ from user import rldd_user
 
 import requests
 
-db = rldd2.LOCAL_connect("local")
+db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 
 
 class ProvLevel:
@@ -69,4 +69,4 @@ class ProvLevel:
             return "ok"
 
 
-ProvLevel(12312367, "Федеральный").addPassportId()
+ProvLevel(5000000000216000436, "Региональный").addPassportId()
