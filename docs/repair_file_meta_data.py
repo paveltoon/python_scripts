@@ -1,11 +1,9 @@
-from pymongo.errors import CursorNotFound
-
 from rldd import rldd2
 from user import rldd_user
 from bson import ObjectId
 
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
-docs = db["docs"].find({"fileMetadata._id": {"$in": [ObjectId("5e6e75c3799ab50001277d5c")]}})
+docs = db["docs"].find({"fileMetadata._id": {"$in": [ObjectId("5e74fb04799ab50001640ef9")]}})
 for doc in docs:
     docId = doc["_id"]
     try:
