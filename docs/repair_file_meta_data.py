@@ -3,7 +3,7 @@ from user import rldd_user
 from bson import ObjectId
 
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
-docs = db["docs"].find({"fileMetadata._id": {"$in": [ObjectId("5e74fb04799ab50001640ef9")]}})
+docs = db["docs"].find({"fileMetadata._id": {"$in": [ObjectId("5e789c5d799ab500010b2ff3")]}})
 for doc in docs:
     docId = doc["_id"]
     try:

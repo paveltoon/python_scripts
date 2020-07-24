@@ -3,7 +3,8 @@ from user import rldd_user
 
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 claims = db['claims'].find({
-    "service.srguServicePassportId": "5000000010000000897",
+    "service.srguServiceId": "5000000000195867143",
+    # "service.srguServicePassportId": "5000000010000000897",
     "personsInfo.esiaAutorisation": True
 })
 for claim in claims:
