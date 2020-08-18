@@ -1,7 +1,7 @@
 from rldd import rldd2
 result_file = open("users.csv", "w+")
 
-remote = rldd2.REMOUT_connect()
+remote = rldd2.REMOTE_connect()
 dbs = remote.list_database_names()
 for dbName in dbs:
     if dbName.startswith("mfc"):

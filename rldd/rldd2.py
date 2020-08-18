@@ -11,6 +11,11 @@ def PROD_connect(login, password, db="rldd2"):
     return client[db]
 
 
+def DPS_connect(login, password, db="dps"):
+    client = pymongo.MongoClient(f"mongodb://{login}:{password}@eisgmu-dps-db-01:27017/dps")
+    return client[db]
+
+
 def DEV_connect():
     client = pymongo.MongoClient(f"mongodb://rlddService:1q2w3e4r@10.10.80.20:27018/rldd2")
     return client["rldd2"]
@@ -21,7 +26,7 @@ def STAGE_connect():
     return client["rldd2"]
 
 
-def REMOUT_connect():
+def REMOTE_connect():
     client = pymongo.MongoClient(f"mongodb://10.10.80.100:27017")
     return client
 

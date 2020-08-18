@@ -23,7 +23,7 @@ mfc_permission = {
 
 # --- Remote Bases ---
 count_users = 0
-remoteConn = rldd2.REMOUT_connect()
+remoteConn = rldd2.REMOTE_connect()
 remoteBases = remoteConn.list_database_names()
 for base in remoteBases:
     if base.startswith('mfc'):

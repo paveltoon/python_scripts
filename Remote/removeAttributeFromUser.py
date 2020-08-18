@@ -1,7 +1,7 @@
 import json
 
 from rldd import rldd2
-db = rldd2.REMOUT_connect()
+db = rldd2.REMOTE_connect()
 user_list = json.load(open('result.json'))
 
 for mfc in user_list:

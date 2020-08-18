@@ -3,7 +3,7 @@ from rldd import rldd2
 from user import rldd_user
 import datetime
 
-remoteConn = rldd2.REMOUT_connect()
+remoteConn = rldd2.REMOTE_connect()
 remoteBases = remoteConn.list_database_names()
 for base in remoteBases:
     if base.startswith('mfc'):

@@ -1,7 +1,7 @@
 from bson import DBRef, ObjectId
 
 from rldd import rldd2
-db = rldd2.REMOUT_connect()
+db = rldd2.REMOTE_connect()
 db_list = db.list_database_names()
 for dbName in db_list:
     if not dbName.startswith("omsu"):

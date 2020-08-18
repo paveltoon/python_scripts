@@ -2,7 +2,7 @@ from bson import DBRef, ObjectId
 from rldd import rldd2
 from user import rldd_user
 
-remote = rldd2.REMOUT_connect()
+remote = rldd2.REMOTE_connect()
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 db_list = remote.list_database_names()
 for dbName in db_list:
