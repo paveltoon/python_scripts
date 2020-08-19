@@ -39,15 +39,29 @@ def getAddress(obj):
         return ''
 
 
+def getContact(obj, con_type):
+    con_list = []
+    if "contacts" in obj:
+        contacts = obj["contacts"]
+        if len(contacts) > 0:
+            for c in contacts:
+                if c["type"] == con_type:
+                    con_list.append(c["value"])
+            return ", ".join(con_list)
+        else:
+            return ''
+    return ''
+
+
 result_file = open('jsonRes.csv', "a+")
-result_file.write("ID;Фамилия;Имя;Отчество;Дата рождения;Пол;Связи;Адрес(Тип, ФИАС, КЛАДР, Страна, Регион, Город и т.д)\n")
+result_file.write(
+    "ID;Фамилия;Имя;Отчество;Дата рождения;Пол;Связи;Адрес(Тип, ФИАС, КЛАДР, Страна, Регион, Город и т.д);Email;Телефоны\n")
 res = open('../07-08-2020 20-32-55 836.json', encoding="utf-8")
 
 tojson = json.load(res)
 result = []
 
 for pers in tojson:
-
     needValues = [
         checkValues(pers, "_id"),
         checkValues(pers, "lastName"),
@@ -56,7 +70,9 @@ for pers in tojson:
         checkValues(pers, "birthDate"),
         checkValues(pers, "gender"),
         getRelations(pers, "relations"),
-        getAddress(pers)
+        getAddress(pers),
+        getContact(pers, "EML"),
+        getContact(pers, "MBT"),
     ]
     val_res = ";".join(needValues)
     result_file.write(f'{val_res}\n')
