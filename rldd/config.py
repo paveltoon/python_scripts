@@ -19,3 +19,8 @@ REMOTE = {
     "post_url": "10.10.80.100",
     "mongodb": "10.10.80.100:27017"
 }
+
+DPS = {
+    "post_url": "eisgmu-dps-db-01:27017",
+    "mongodb": f"{rldd_user.login}:{rldd_user.pwd}@eisgmu-dps-db-01:27017/dps"
+}
