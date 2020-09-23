@@ -11,9 +11,14 @@ def PROD_connect(login, password, db="rldd2"):
     return client[db]
 
 
-def DPS_connect(login, password, db="dps"):
+def DPS_connect(login, password):
     client = pymongo.MongoClient(f"mongodb://{login}:{password}@eisgmu-dps-db-01:27017/dps")
-    return client[db]
+    return client["dps"]
+
+
+def DPS_DEV_connect():
+    client = pymongo.MongoClient(f"mongodb://eisgmu-services-db-dev:27018/dps")
+    return client["dps"]
 
 
 def DEV_connect():

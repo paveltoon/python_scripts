@@ -3,12 +3,15 @@ from user import rldd_user
 
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
 claims = db["claims"].find(
-    {"personsInfo.trustedPersons.trustedId": {'$exists': True}, "personsInfo.type": {'$in': ["PHYSICAL", "IP"]},
-     "trustedPersons.trustedPersonId": {'$exists': False}})
+    {"activationDate": {'$gte': rldd2.ISODate("2020-09-01T00:00:00.841+0000"),
+                        '$lte': rldd2.ISODate("2020-09-11T00:00:00.841+0000")},
+     "resultStatus": {'$exists': False},
+     "personsInfo.0.trustedPersons.0.trustedId": {'$exists': True}, "senderCode": "IPGU01001",
+     "trustedPersons": {'$exists': False}})
 result_file = open('trustedPersons.log', 'w+')
 for claim in claims:
+    _id = claim["_id"]
     try:
-        _id = claim["_id"]
         ccn = claim['customClaimNumber']
         personsInfo = claim["personsInfo"]
         isTrusted = False

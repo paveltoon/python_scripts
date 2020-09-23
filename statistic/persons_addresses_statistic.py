@@ -50,7 +50,7 @@ iteration = 0
 file_num = 1
 result_file = open(f"persons{file_num}.csv", "w+", encoding="utf-8")
 result_file.write("surname;firstName;middleName;dateOfBirth;gender;registrationAddress;email;phone\n")
-persons = dps["persons"].find({"technicalProperties.type": "GOLD", "type": "PHYSICAL"}, projection, no_cursor_timeout=True)
+persons = dps["persons"].find({"technicalProperties.type": "GOLD", "type": "PHYSICAL"}, projection, no_cursor_timeout=True).limit(10)
 for person in persons:
     try:
         iteration += 1

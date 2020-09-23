@@ -108,6 +108,18 @@ def calculate_raw_deadline(full_claim, stages):
     return {"daysToDeadline": days_to_deadline, "deadlineDate": new_deadline_date}
 
 
+def checkSuspenseDays(_claim):
+    _suspense_days = claim["suspenseReason"]["suspenseDays"]
+    _suspense_date = claim["suspenseReason"]["createDate"]
+
+    _result_suspense_date = _suspense_date + datetime.timedelta(days=_suspense_days)
+    _result_suspense_days = (_result_suspense_date - datetime.datetime.now()).days + 1
+    if _result_suspense_days < 0:
+        raise ValueError(f'Claim {claim["customClaimNumber"]} suspenseDays < 0')
+    else:
+        return _result_suspense_days
+
+
 def get_statuses(claim_id):
     statuses_list = list(
         db["claims_status"].find({"claimId": str(claim_id), "statusCode": {"$in": ["70", "71"]}}).sort("statusDate",
@@ -138,9 +150,8 @@ db = Client(config.DEV).connect()
 # claims = db["claims"].find({"deadlineDate": {'$gte': Client.ISODate("2021-01-01T21:00:00.000+0000")}})
 
 # SuspenseDays query
-
 claims = db["claims"].find({
-    "activationDate": {'$gte': Client.ISODate("2020-01-01T00:00:00.000+0000")},
+    "activationDate": {'$gte': Client.ISODate("2019-06-01T00:00:00.000+0000")},
     "suspenseDays": {'$exists': True},
     "daysToDeadline": {'$gt': 0}
 })
@@ -168,10 +179,17 @@ for claim in claims:
     deadlineDate = deadlines["deadlineDate"]
     daysToDeadline = int
 
-    if "suspenseDays" in claim:
-        suspenseDays = claim["suspenseDays"]
-        suspenseReason = claim["suspenseReason"]
+    end_point = claim["docSendDate"] if "docSendDate" in claim else datetime.datetime.now()
 
+    daysToDeadline = (deadlineDate - end_point).days + 1
+
+    if "suspenseDays" in claim:
+        suspenseReason = claim["suspenseReason"]
+        suspenseDays = suspenseReason["suspenseDays"]
+        suspenseWorkdays = suspenseReason["workingDays"]
+        suspenseDate = suspenseReason["createDate"]
+
+         # Прогон по статусам
         statuses = get_statuses(claimId)
         dif_days = 0
         for i in range(len(statuses) - 1):
@@ -180,17 +198,17 @@ for claim in claims:
                 status_code = status["statusCode"]
                 status_date = status["statusDate"]
                 dif_days += (statuses[i + 1]["statusDate"] - status_date).days
-                print(status_code)
 
         # Добавляем дни между статусами к дедлайну
         deadlineDate += datetime.timedelta(days=dif_days)
-        raw_daysToDeadline += datetime.timedelta(days=dif_days)
+        daysToDeadline = (deadlineDate - end_point).days + 1
+        # Проверка на существующий 70 статус.
+        if claim["currStatus"]["statusCode"] == "70":
+            current_suspense_days = claim["suspenseReason"]["suspenseDays"]
+            deadlineDate += datetime.timedelta(days=current_suspense_days)
 
-        end_point = claim["docSendDate"] if "docSendDate" in claim else datetime.datetime.now()
-
-    if "resultStatus" in claim:
-        daysToDeadline = (deadlineDate - claim["docSendDate"]).days + 1
-    else:
-        daysToDeadline = (deadlineDate - datetime.datetime.now()).days + 1
-
-    print(claimId, claim["activationDate"], daysToDeadline, deadlineDate)
+            suspense_days_claim = checkSuspenseDays(claim)
+            updater["suspenseDays"] = suspense_days_claim
+    updater["deadlineDate"] = deadlineDate
+    updater["daysToDeadline"] = daysToDeadline
+    print(claimId, daysToDeadline, deadlineDate, updater)

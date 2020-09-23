@@ -24,3 +24,8 @@ DPS = {
     "post_url": "eisgmu-dps-db-01:27017",
     "mongodb": f"{rldd_user.login}:{rldd_user.pwd}@eisgmu-dps-db-01:27017/dps"
 }
+
+DPS_DEV = {
+    "post_url": "eisgmu-services-db-dev:27018",
+    "mongodb": f"eisgmu-services-db-dev:27018/dps"
+}
