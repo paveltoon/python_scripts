@@ -20,7 +20,7 @@ insert_count = 0
 #     "resultStatus": {'$exists': False}
 # }
 
-query = {"customClaimNumber": "P001-7900168090-23268829"}
+query = {"customClaimNumber": "50-50/011-50/011/013/2019-32"}
 
 projection = {
     "_id": 1,
@@ -32,6 +32,7 @@ projection = {
     "daysToDeadline": 1,
     "deadlineInWorkDays": 1,
     "deadlineStages": 1,
+    "docSendDate": 1,
     "customClaimNumber": 1,
     "currStatus": 1,
     "statuses": 1,
