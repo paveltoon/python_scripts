@@ -175,7 +175,6 @@ def send_to_claim_deadline_changes(_claim_id, _previous_deadline_date, _next_dea
     if _upd.inserted_id:
         global insert_count
         insert_count += 1
-        print(insert_count)
         if insert_count >= 100:
             while check_deadline_changes_queue().json()["totalCount"] != 0:
                 sleep(1)  # Стучимся каждую секунду в АПИ для проверки, что все заявки отправились
