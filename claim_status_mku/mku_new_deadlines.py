@@ -25,7 +25,7 @@ iterat = 0
 file_num = 1
 result_file = open(f"./files/mku_new_{file_num}.csv", "w+")
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
-claims = db["claims_status_mku"].find({"createDate": {'$gte': rldd2.ISODate("2020-08-05T11:00:00.000+0000")}})
+claims = db["claims_status_mku"].find({"statusDate": rldd2.ISODate("2020-10-01T21:00:00.000+0000")})
 for claim in claims:
 
     iterat += 1

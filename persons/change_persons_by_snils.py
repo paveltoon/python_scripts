@@ -3,9 +3,9 @@ from rldd import config
 
 changeList = [
     {
-        "ccn": "P001-3772936743-38306344",
-        "newTrustedPerson": "",
-        "newPerson": "19561998337"
+        "ccn": "P001-6158015544-38126563",
+        "newTrustedPerson": "13702651133",
+        "newPerson": "00140741578"
     }
 ]
 

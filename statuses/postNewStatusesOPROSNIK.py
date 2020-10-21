@@ -10,14 +10,14 @@ for claim in claims:
     iteration += 1
     claimId = claim["_id"]
     status62 = False
-    client.postStatus(claimId, 56, "Статус проставлен автоматически через РЛДД, в рамках задачи EISOUSUP-6074")
-    client.postStatus(claimId, 3, "Статус проставлен автоматически через РЛДД, в рамках задачи EISOUSUP-6074")
+    client.postStatus(claimId, 56, "Статус проставлен автоматически через РЛДД")
+    client.postStatus(claimId, 3, "Статус проставлен автоматически через РЛДД")
     # client.postStatus(claimId, 62, "Статус проставлен автоматически через РЛДД, в рамках задачи EISOUSUP-6074")
 
     while not status62:
         statuses = db["claims_status"].find_one({"claimId": str(claimId), "statusCode": "62"})
         if statuses is not None:
             status62 = True
-            client.postStatus(claimId, 24, "Статус проставлен автоматически через РЛДД, в рамках задачи EISOUSUP-6074")
+            client.postStatus(claimId, 24, "Статус проставлен автоматически через РЛДД")
 
     print(f"Claim {claimId} is done. Iteration: {iteration}")

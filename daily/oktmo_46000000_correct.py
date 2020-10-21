@@ -29,13 +29,13 @@ for claim in claims:
         for field in fields:
             if "stringId" in field and field["stringId"] == "municipality":
                 oktmo = field["value"]
-                localClaim = {
-                    "customClaimNumber": ccn,
-                    "oldOktmo": claim["oktmo"],
-                    "newOktmo": oktmo,
-                    "createDate": datetime.today()
-                }
-                local["claims"].insert_one(localClaim)
+                # localClaim = {
+                #     "customClaimNumber": ccn,
+                #     "oldOktmo": claim["oktmo"],
+                #     "newOktmo": oktmo,
+                #     "createDate": datetime.today()
+                # }
+                # local["claims"].insert_one(localClaim)
                 upd = db["claims"].update_one({
                     "_id": claimId
                 }, {

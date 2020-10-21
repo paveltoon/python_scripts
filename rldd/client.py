@@ -23,7 +23,7 @@ class Client:
         return self.connect().list_database_names()
 
     def postStatus(self, claim_id, status_code,
-                   comment="Статус создан автоматически через РЛДД, для корректного закрытия заявки."):
+                   comment="Статус создан автоматически через РЛДД"):
         url = f'http://{self.__url}/api/statuses/'
 
         headers = {
@@ -38,14 +38,6 @@ class Client:
             "createState": "COMPLETED"
         }
         return requests.request("POST", url=url, headers=headers, data=json.dumps(body))
-
-    def copyClaimToDev(self, config, claims_query):
-        claims = self.connect()["claims"].find(claims_query)
-        for claim in claims:
-            claimId = claim["_id"]
-
-            # = pymongo.MongoClient(f"mongodb://{config.mongodb}")
-            # client["rldd2"]["claims"].insert_one(claim)
 
     @staticmethod
     def ISODate(date):

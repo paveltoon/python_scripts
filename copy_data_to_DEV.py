@@ -12,7 +12,7 @@ addresses_types = [
     "birthAddressId"
 ]
 
-ccn = "P001-6288431207-30738431"
+ccn = "P001-7994014932-39416686"
 # ccn = input("Номер заявки: ")
 
 

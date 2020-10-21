@@ -5,7 +5,7 @@ iteration = 0
 result_file = open('result.csv', 'w+')
 result_file.write(f"statements._id;statements.internalNum;orgName;orgCode;name;statements.recordRequisites.recordNum;whenClose;guid_name\n")
 with open('pros.csv', newline='') as csvfile:
-    file = list(csv.reader(csvfile, delimiter=';', quotechar='|'))[67791:]
+    file = list(csv.reader(csvfile, delimiter=';', quotechar='|'))
     for row in file:
         iteration += 1
         rs_id = row[1]
@@ -51,13 +51,13 @@ with open('pros.csv', newline='') as csvfile:
 
             result_data["name"] = doc["name"]
 
-            prot = db["prot"].find_one({
+            prot = db["prot_IssuedDocument"].find_one({
                 "idAppeal": str(appeal_id),
                 "currentStep": "ISSUING",
                 "oldStep": "PRINT"
             })
             if prot:
-                result_data["whenClose"] = prot["whenClose"]
+                result_data["whenClose"] = prot["whenClose"].isoformat()
 
             is_doc = list(db["rs_issued_document"].find({
                 "statementGuid": rs_id,

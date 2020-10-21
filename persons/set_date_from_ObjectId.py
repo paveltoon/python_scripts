@@ -16,7 +16,7 @@ claims_projection = {
     "claimCreate": 1
 }
 iteration = 0
-persons = dps["persons"].find({"technicalProperties.type": "GOLD"}, projection, no_cursor_timeout=True).skip(3660007)
+persons = dps["persons"].find({"technicalProperties.type": "GOLD"}, projection, no_cursor_timeout=True)
 for person in persons:
     iteration += 1
     correct_type = None
@@ -37,6 +37,6 @@ for person in persons:
 
     upd = dps["persons"].update_one(
         {"_id": person_id},
-        {"$set": {"agreements.status": True, "agreements.date": creation_date}}
+        {"$set": {"personalDataAgreement.status": True, "personalDataAgreement.date": creation_date}}
     )
     print(f'Iteration: {iteration}. Person {person_id} has been corrected. progress: {upd.modified_count} / {upd.matched_count}. Corrected by {correct_type}.')
