@@ -30,7 +30,9 @@ db_persons = Client(config.DPS, "dps").connect()
 claims = db["claims"].find({
     "customClaimNumber": {
         "$in": [
-            "P001-4046174126-39626518"
+            "P001-8381225287-39803853",
+            "P001-0210301289-39237994",
+            "P001-7807221330-39841751"
         ]
     }
 })

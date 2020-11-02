@@ -14,13 +14,11 @@ db = Client(config.PROD).connect()
 processed = 0
 insert_count = 0
 
-# query = {
-#     "activationDate": {'$gte': Client.ISODate("2019-12-31T21:00:00.000+0000")},
-#     "senderCode": {'$ne': "MBKT"},
-#     "resultStatus": {'$exists': False}
-# }
-
-query = {"customClaimNumber": "50-50/011-50/011/013/2019-32"}
+query = {
+    "activationDate": {"$gte": Client.ISODate("2020-03-11T21:00:00.000+0000")},
+    "deadlineDate": {"$gte": Client.ISODate("2020-03-11T21:00:00.000+0000"),
+                     "$lte": Client.ISODate("2020-10-02T20:00:00.000+0000")}
+}
 
 projection = {
     "_id": 1,
@@ -175,7 +173,7 @@ def send_to_claim_deadline_changes(_claim_id, _previous_deadline_date, _next_dea
     if _upd.inserted_id:
         global insert_count
         insert_count += 1
-        if insert_count >= 100:
+        if insert_count % 1000 == 0:
             while check_deadline_changes_queue().json()["totalCount"] != 0:
                 sleep(1)  # Стучимся каждую секунду в АПИ для проверки, что все заявки отправились
 
@@ -215,7 +213,7 @@ def calculate_suspense_days(suspense_reason, curr_status, _deadline_date, _end_p
 
 while True:
     try:
-        claims = db["claims"].find(query, projection, no_cursor_timeout=True).skip(processed).limit(2000)
+        claims = db["claims"].find(query, projection, no_cursor_timeout=True).skip(processed)
         for claim in claims:
             try:
                 processed += 1
@@ -257,7 +255,8 @@ while True:
                 print(v)
                 continue
 
-            print(processed, yellow + ccn + end, claimId, daysToDeadline, deadlineDate, f"{upd.modified_count} / {upd.matched_count}")
+            print(processed, yellow + ccn + end, claimId, daysToDeadline, deadlineDate,
+                  f"{upd.modified_count} / {upd.matched_count}")
         check_deadline_changes_queue()
         break
     except InvalidBSON as e:

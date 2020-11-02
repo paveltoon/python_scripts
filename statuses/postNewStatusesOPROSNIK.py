@@ -4,7 +4,7 @@ from rldd import config
 client = Client(config.PROD)
 db = client.connect()
 iteration = 0
-claims = db["claims"].find({"service.srguServiceId": "1234567890000000001", "currStatus.statusCode": "2",
+claims = db["claims"].find({"service.srguServiceId": "1234567891000000001", "currStatus.statusCode": "2",
                             "claimCreate": {'$gte': Client.ISODate("2020-01-08T16:19:26.860+0000")}})
 for claim in claims:
     iteration += 1

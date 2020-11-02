@@ -1,10 +1,11 @@
 from rldd.client import Client
 from rldd import config
-import keyboard
+
 prod = Client(config.PROD).connect()
 dev = Client(config.DEV).connect()
 dps = Client(config.DPS, "dps").connect()
 dps_dev = Client(config.DPS_DEV, "dps-develop").connect()
+
 addresses_types = [
     "registrationAddressId",
     "locationAddressId",
@@ -12,8 +13,7 @@ addresses_types = [
     "birthAddressId"
 ]
 
-ccn = "P001-7994014932-39416686"
-# ccn = input("Номер заявки: ")
+ccn = "M503-3446530994-7523909"
 
 
 def get_trusted_persons(claim):

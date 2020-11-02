@@ -1,9 +1,10 @@
 from rldd.client import Client
 from rldd import config
 
+back_to_status = 2  # К какому статусу откатить
+
 claims_list = [
-    "P001-7994014932-39416686",
-    "P001-4450351729-39526134"
+    "P001-1787579005-35728043"
 ]
 
 client = Client(config.PROD)
@@ -28,7 +29,7 @@ for claim in claims:
         # Удаление из заявки атрибутов resultStatus, docSendDate
         upd = db["claims"].update_one({"_id": claimId}, {"$unset": {"resultStatus": "", "docSendDate": ""}})
         # Пост статуса в заявку
-        client.postStatus(claimId, 2)
+        client.postStatus(claimId, back_to_status)
         print(f"Claim: {ccn}. Progress: {upd.modified_count} / {upd.matched_count}")
 
     except KeyError as k_e:

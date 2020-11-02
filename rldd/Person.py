@@ -4,6 +4,9 @@ from rldd.client import Client
 class Person:
     def __init__(self, _person, _db):
         self.__person = _person
+        if "_class" in self.__person:
+            del self.__person["_class"]
+
         self.__db = _db
 
     def set_doc_from_id(self, document_param, db_name) -> None:
