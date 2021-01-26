@@ -7,9 +7,9 @@ while True:
     try:
         claims = db["claims"].find({}).limit(100).skip(processed)
         for claim in claims:
-            print(claim["_id"])
+            print(claim["_id"], processed)
             processed += 1
         break
     except InvalidBSON as e:
-        print(e)
+        print(e, processed)
         processed += 1

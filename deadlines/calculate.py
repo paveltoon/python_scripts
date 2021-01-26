@@ -14,11 +14,10 @@ db = Client(config.PROD).connect()
 processed = 0
 insert_count = 0
 
-query = {
-    "activationDate": {"$gte": Client.ISODate("2020-03-11T21:00:00.000+0000")},
-    "deadlineDate": {"$gte": Client.ISODate("2020-03-11T21:00:00.000+0000"),
-                     "$lte": Client.ISODate("2020-10-02T20:00:00.000+0000")}
-}
+query = {"customClaimNumber": "P001-8055861811-39808278"}
+
+result_file = open('deadlines_correct.csv', 'w+')
+result_file.write("customClaimNumber;activationDate;old DeadlineDate;new deadlineDate;daysToDeadline\n")
 
 projection = {
     "_id": 1,
@@ -255,10 +254,14 @@ while True:
                 print(v)
                 continue
 
-            print(processed, yellow + ccn + end, claimId, daysToDeadline, deadlineDate,
+            print(processed, yellow + ccn + end, claimId, daysToDeadline, claim["deadlineDate"].isoformat(),
+                  deadlineDate.isoformat(),
                   f"{upd.modified_count} / {upd.matched_count}")
+            result_file.write(
+                f"{ccn};{claim['activationDate']};{claim['deadlineDate']};{deadlineDate};{daysToDeadline}\n")
         check_deadline_changes_queue()
         break
     except InvalidBSON as e:
         print(e)
         processed += 1
+result_file.close()

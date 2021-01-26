@@ -69,4 +69,4 @@ class ProvLevel:
             return "ok"
 
 
-ProvLevel(372713547, "Федеральный").addPassportId()
+ProvLevel("5000000010000015328", "Региональный").addPassportId()

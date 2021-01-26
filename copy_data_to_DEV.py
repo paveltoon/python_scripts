@@ -13,7 +13,7 @@ addresses_types = [
     "birthAddressId"
 ]
 
-ccn = "M503-3446530994-7523909"
+ccn = "P001-7434885566-22857394"
 
 
 def get_trusted_persons(claim):

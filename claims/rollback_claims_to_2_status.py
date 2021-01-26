@@ -1,7 +1,7 @@
 from rldd.client import Client
 from rldd import config
 
-back_to_status = 2  # К какому статусу откатить
+back_to_status = 39  # К какому статусу откатить
 
 claims_list = [
     "P001-1787579005-35728043"

@@ -15,15 +15,13 @@ headers = {
 
 # Connect
 db = rldd2.PROD_connect(rldd_user.login, rldd_user.pwd)
-claims = db["claims"].find(
-    {"service.srguServiceId": "5000000000181746269", "service.srguServicePassportId": "5000000010000000897",
-     "currStatus.statusCode": "2", "consultation": {"$ne": True}, "senderCode": {"$ne": "IPGU01001"}})
+claims = db["claims"].find({"customClaimNumber": "P001-8418981586-36302142"})
 for claim in claims:
     _id = claim["_id"]
     ccn = claim["customClaimNumber"]
     req_body = {
         "claimId": str(_id),
-        "comment": "Статус создан автоматически через РЛДД, для корректного закрытия заявки",
+        "comment": "Статус создан автоматически через РЛДД, для корректного закрытия заявки в рамках задачи PGUSVC-4981",
         "statusCode": status,
         "createBy": "rldd2",
         "lastModifiedBy": "rldd2",
