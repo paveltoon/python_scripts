@@ -5,7 +5,27 @@ persons = Client(config.DPS, "dps").connect()["persons"]
 prod = Client(config.PROD).connect()
 
 persons_list = [
-    "5c126b739f52196d8a246cc4"
+    "57b3284ca78e509d2b6357ec",
+    "565fd4cba78e53d22a97d918",
+    "58dbced9a78e25942a1dfad5",
+    "5e00d9b322e5c60001fb531b",
+    "5e00d9b322e5c60001fb5300",
+    "5e17735722e5c60001f0e53d",
+    "5e17735722e5c60001f0e572",
+    "5ab8e8f3a78e0d1980e09168",
+    "5ab8e8f0a78edc558c34be7f",
+    "5ab8e8f3a78e0d1980e0918a",
+    "5af1582da78e7efb1d2d6adf",
+    "5af40cb3a78e97f0e7501e2a",
+    "5af40cb6a78ed46ec894fcb0",
+    "5af40cb7a78e97f0e7501e92",
+    "5af40cb8a78e97f0e7501eb3",
+    "5af40cb8a78e97f0e7501edc",
+    "5af41d05a78e97f0e7517695",
+    "5af41d0ca78e97f0e7517739",
+    "5af40f91a78ed46ec8953ba9",
+    "5af409a8a78ed46ec894baa2",
+    "5c07d6a44cb2f97ddcb30e05"
 ]
 
 
@@ -134,8 +154,11 @@ for person_id in persons_list:
         docs = person["identityDocuments"]
         for doc in docs:
             if doc["actual"]:
-                result["serial"] = doc["serial"]
-                result["number"] = doc["number"]
+                try:
+                    result["serial"] = doc["serial"]
+                    result["number"] = doc["number"]
+                except KeyError:
+                    continue
     if result["number"]:
         ccns = prod["claims"].find(
             {"service.srguServicePassportId": "5000000000215655779", "permitFields.type": "DOC_NUMBER",

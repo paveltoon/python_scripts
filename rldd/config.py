@@ -27,5 +27,15 @@ DPS = {
 
 DPS_DEV = {
     "post_url": "eisgmu-services-db-dev:27018",
-    "mongodb": f"eisgmu-services-db-dev:27018/dps"
+    "mongodb": "eisgmu-services-db-dev:27018/dps"
+}
+
+replicaSET = {
+    "post_url": "",
+    "mongodb": "10.10.80.140:27017"
+}
+
+PKPVD = {
+    "post_url": "",
+    "mongodb": f"{rldd_user.pvd_login}:{rldd_user.pvd_password}@10.50.109.227:27017/pvdrs"
 }

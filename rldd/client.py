@@ -19,9 +19,6 @@ class Client:
         else:
             return client
 
-    def get_db_list(self):
-        return self.connect().list_database_names()
-
     def postStatus(self, claim_id, status_code,
                    comment="Статус создан автоматически через РЛДД"):
         url = f'http://{self.__url}/api/statuses/'

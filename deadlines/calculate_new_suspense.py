@@ -14,8 +14,7 @@ db = Client(config.PROD).connect()
 processed = 0
 insert_count = 0
 
-query = {"activationDate": {"$gte": Client.ISODate("2020-10-03T00:00:00.000+0000")},
-         "suspenseReason": {"$exists": True}}
+query = {"_id": "8cdba039-a28a-4654-80a5-59a363d33278"}
 
 result_file = open('deadlines_correct.csv', 'w+')
 result_file.write("customClaimNumber;activationDate;old DeadlineDate;new deadlineDate;daysToDeadline\n")
@@ -87,30 +86,27 @@ def get_day_of_the_year(date):
     return date.timetuple().tm_yday
 
 
-def calc_workdays(date_from, work_days, claim_id):
+def calc_workdays(date_from, work_days, days_to_deadline, claim_id):
     calendar = get_calendar(date_from.year, claim_id)
     doy = get_day_of_the_year(date_from)
-    ddays = 0
-    step = 0
+    ddays = 0 + days_to_deadline
     while work_days > 0:
         if doy in calendar:
-            if step <= 0:
-                ddays -= 2
             doy += 1
             ddays += 1
-            step += 1
         else:
             doy += 1
             work_days -= 1
             ddays += 1
-            step += 1
 
             # Если дедлайн выпадает на новый год
         if doy > get_day_of_the_year(datetime.datetime(date_from.year, 12, 31)):
             calendar = get_calendar(date_from.year + 1, claim_id)
             doy = 1
     deadline_date = date_from.replace(hour=21, minute=0, second=0, microsecond=0) + datetime.timedelta(
-        days=ddays)
+        days=ddays) if days_to_deadline == 0 else date_from.replace(hour=21, minute=0, second=0,
+                                                                    microsecond=0) + datetime.timedelta(
+        days=ddays - days_to_deadline)
     return {
         'daysToDeadline': ddays,
         'deadlineDate': deadline_date,
@@ -127,17 +123,20 @@ def calculate_raw_deadline(full_claim, stages):
         else:
             calDays += int(st["deadline"])
 
-    deadline_data = calc_workdays(full_claim["activationDate"], workDays, full_claim["_id"])
+    deadline_data = calc_workdays(full_claim["activationDate"], workDays, 0, full_claim["_id"])
 
     days_to_deadline = deadline_data["daysToDeadline"] + calDays
     new_deadline_date = deadline_data["deadlineDate"] + datetime.timedelta(days=calDays)
 
     # Если последний день выпадает на выходной
     if get_day_of_the_year(new_deadline_date) in deadline_data["calendar"]:
-        deadline_data = checkEndDate(new_deadline_date, full_claim["_id"])
+        deadline_data = calc_workdays(deadline_data["deadlineDate"] + datetime.timedelta(days=calDays), 1,
+                                      days_to_deadline, full_claim["_id"])
         days_to_deadline = deadline_data["daysToDeadline"]
         new_deadline_date = deadline_data["deadlineDate"]
+        new_deadline_date -= datetime.timedelta(days=1)
 
+    new_deadline_date -= datetime.timedelta(days=1)
     return {"daysToDeadline": days_to_deadline, "deadlineDate": new_deadline_date}
 
 
@@ -146,16 +145,14 @@ def checkEndDate(_date, _claimId):
     _last_day_of_this_year = get_day_of_the_year(datetime.datetime(_dateYear, 12, 31))
     _calendar: list = get_calendar(_dateYear, _claimId)
     doy = get_day_of_the_year(_date) + 1
-    _deadline_days = 0
     ddays = 0
     while doy in _calendar:
         doy += 1
         ddays += 1
-        _deadline_days += 1
         if doy >= _last_day_of_this_year:
             _calendar = get_calendar(_dateYear + 1, _claimId)
             doy = 1
-    return {"deadlineDate": _date + datetime.timedelta(days=ddays), "daysToDeadline": _deadline_days}
+    return _date + datetime.timedelta(days=ddays)
 
 
 def checkSuspenseDays(_claim):
@@ -211,9 +208,10 @@ def calculate_suspense_days(suspense_reason, curr_status, _deadline_date, _end_p
             status = statuses[i]
             status_date = status["statusDate"]
             dif_days += (statuses[i + 1]["statusDate"] - status_date).days
-
+            _deadline_date += datetime.timedelta(days=dif_days)
+            _deadline_date = checkEndDate(_deadline_date, claimId)
     # Добавляем дни между статусами к дедлайну
-    _deadline_date += datetime.timedelta(days=dif_days)
+
     _daysToDeadline = (_deadline_date - _end_point).days + 1
     # Проверка на существующий 70 статус.
     if curr_status["statusCode"] == "70":
@@ -257,13 +255,14 @@ while True:
                     sus = calculate_suspense_days(claim["suspenseReason"], claim["currStatus"], deadlineDate, end_point)
                     deadlineDate = sus["deadlineDate"]
                     daysToDeadline = sus["daysToDeadline"]
-                deadlineDate = checkEndDate(deadlineDate, claimId)["deadlineDate"]
+                    deadlineDate = checkEndDate(deadlineDate, claimId)
                 updater["deadlineDate"] = deadlineDate
                 updater["daysToDeadline"] = daysToDeadline
-                upd = db["claims"].update_one({"_id": claimId}, {"$set": updater})
+                # upd = db["claims"].update_one({"_id": claimId}, {"$set": updater})
 
                 if origDeadlineDate != deadlineDate:
-                    send_to_claim_deadline_changes(str(claimId), origDeadlineDate, deadlineDate)
+                    pass
+                    # send_to_claim_deadline_changes(str(claimId), origDeadlineDate, deadlineDate)
 
             except KeyError as k:
                 print(k)
@@ -273,10 +272,11 @@ while True:
                 continue
 
             print(processed, yellow + ccn + end, claimId, daysToDeadline, claim["deadlineDate"].isoformat(),
-                  deadlineDate.isoformat(), f"{upd.modified_count} / {upd.matched_count}")
+                  deadlineDate.isoformat())
+            # f"{upd.modified_count} / {upd.matched_count}")
             result_file.write(
                 f"{ccn};{claim['activationDate']};{claim['deadlineDate']};{deadlineDate};{daysToDeadline}\n")
-        check_deadline_changes_queue()
+        # check_deadline_changes_queue()
         break
     except InvalidBSON as e:
         print(e)
