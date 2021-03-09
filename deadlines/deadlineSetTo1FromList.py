@@ -1,6 +1,6 @@
 from rldd.client import Client
 from rldd import config
-from deadlines.deadline_set_to_1 import setDeadlineToOneDay
+from deadlines.deadline_functions import setDeadlineToOneDay
 
 db = Client(config.PROD).connect()
 claimsFile = open("claimIds.txt")

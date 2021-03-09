@@ -14,7 +14,11 @@ db = Client(config.PROD).connect()
 processed = 0
 insert_count = 0
 
-query = {"_id": "8cdba039-a28a-4654-80a5-59a363d33278"}
+query = {"customClaimNumber": {
+    "$in": [
+        "P001-9048482299-41790380"
+    ]
+}}
 
 result_file = open('deadlines_correct.csv', 'w+')
 result_file.write("customClaimNumber;activationDate;old DeadlineDate;new deadlineDate;daysToDeadline\n")
@@ -272,8 +276,7 @@ while True:
                 continue
 
             print(processed, yellow + ccn + end, claimId, daysToDeadline, claim["deadlineDate"].isoformat(),
-                  deadlineDate.isoformat())
-            # f"{upd.modified_count} / {upd.matched_count}")
+                  deadlineDate.isoformat())  #f"{upd.modified_count} / {upd.matched_count}")
             result_file.write(
                 f"{ccn};{claim['activationDate']};{claim['deadlineDate']};{deadlineDate};{daysToDeadline}\n")
         # check_deadline_changes_queue()

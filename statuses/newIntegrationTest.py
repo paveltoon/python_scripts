@@ -1,18 +1,8 @@
-from rldd import rldd2
 from requests import request
 import json
 
-host = "10.10.80.20"
+host = "10.10.80.54:8080"
 statusCode = "10"
-
-db = rldd2.DEV_connect()
-claims = db.claims.find({
-    "customClaimNumber": {
-        "$in": [
-            "P001-4736138748-23267568"
-        ]
-    }
-})
 
 
 def create_status(claim_id):
@@ -82,16 +72,4 @@ def update_status(status_id, claim_id):
     return resJson
 
 
-for claim in claims:
-    claimId = claim["_id"]
-    statusId = create_status(claimId)
 
-    sendFile1 = send_file("P001-4736138748-23267568_Zhaloba.odt")
-    docId = create_doc(statusId, "STATUS",  "P001-4736138748-23267568_Zhaloba.odt", sendFile1)
-    sendFile2 = send_file("Snimok+ekrana+ot+2020-09-09+15-00-42.png")
-    docId2 = create_doc(statusId, "STATUS", "Snimok+ekrana+ot+2020-09-09+15-00-42.png", sendFile2)
-    sendFile3 = send_file("Reshenie_ob_otka_taxi_duplicate_OOO_OOO__RUBES.odt")
-    docId3 = create_doc(statusId, "STATUS", "Reshenie_ob_otka_taxi_duplicate_OOO_OOO__RUBES.odt", sendFile3)
-
-    updateStatus = update_status(statusId, claimId)
-    print(updateStatus)
